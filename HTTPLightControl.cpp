@@ -21,6 +21,9 @@
 // -------------------------------------------------------------
 #include "HTTPLightControl.h"
 
+void null_command( LightClient * lc, uint8_t * data, uint8_t dataLength ) {}
+
+fnCommand commandTable[ COMMAND_MAX ] = { null_command };
 LightClient lightClients[ kMaxLightClients ];
 
 LightClient::LightClient()
@@ -36,6 +39,15 @@ bool LightClient::matchesAddress( XBeeAddress64 & addr )
 	return (_addr.getMsb() == addr.getMsb() && _addr.getLsb() == addr.getLsb());
 }
 
+void setCommand( uint8_t command, fnCommand command_function )
+{
+	if ( command >= COMMAND_MAX )
+	{
+		return;
+	}
+
+	commandTable[ command ] = command_function;
+}
 
 LightClient * findOrCreateLightClient( XBeeAddress64 & addr )
 {
@@ -151,28 +163,6 @@ bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * dat
 	return false;
 }
 
-
-void no_command( LightClient * lc, uint8_t * data, uint8_t dataLength )
-{
-
-}
-
-void receive_client_name( LightClient * lc, uint8_t * data, uint8_t dataLength )
-{
-	int stringLength = dataLength;
-	if ( kMaxClientNameCharacters < stringLength )
-	{
-		stringLength = kMaxClientNameCharacters;
-	}
-
-	strncpy( lc->_name, (const char*)data, stringLength );
-}
-
-fnCommand commandTable[ ] = {
-	no_command,
-	no_command,
-	receive_client_name
-};
 
 void handleClientCommand( XBee & xbee, LightClient * lc, uint8_t * data, uint8_t dataLength )
 {

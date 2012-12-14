@@ -56,13 +56,17 @@ enum ClientCommand
 {
   ERROR = 0,
   TOGGLE_LED,
-  SEND_CLIENT_NAME,
+  SEND_CLIENT_NAME, // request for client's name
+  CONTROL_LIGHT,    // on/off
+
 
   COMMAND_MAX
 };
 
 typedef void (*pLightOperator)( struct LightClient * lc, boolean enable );
 typedef void (*fnCommand)( LightClient * lc, uint8_t * data, uint8_t dataLength );
+
+void setCommand( uint8_t command, fnCommand command_function );
 
 LightClient * findOrCreateLightClient( XBeeAddress64 & address );
 LightClient * getClientAtIndex( uint8_t index );
