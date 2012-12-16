@@ -32,6 +32,49 @@ const uint8_t kMaxClientRetries = 2;
 
 const uint16_t kMaxResponseTimeoutMilliseconds = 16;
 
+// lower level parsing
+struct KeyPair
+{
+  const char * key;
+  const char * value;
+};
+
+
+const uint8_t kMaxHTTPRequestLength = 32;
+const uint8_t kMaxKeypairs = 4;
+const uint8_t kMaxHTTPMethodLength = 8;
+
+
+struct HTTPRequest
+{
+  
+  String buffer;
+
+  uint8_t _next_keypair;
+  KeyPair keypairs[ kMaxKeypairs ];
+  //char method[ kMaxHTTPMethodLength ];
+  //char request[ kMaxHTTPRequestLength ]; 
+
+  uint8_t method_offset;
+  uint8_t method_length;
+
+  uint8_t request_offset;
+  uint8_t request_length;
+
+  HTTPRequest();
+
+  void parseMethodAndRequest();
+};
+
+
+void keypair_add( struct HTTPRequest * ci, const char * key, const char * value );
+void keypair_parse( struct HTTPRequest * ci, char * request, unsigned int len );
+const char * keypair_getvalue( struct HTTPRequest * ci, const char * key );
+
+
+
+
+
 enum LightClientType
 {
   eUnused = 0,      // unused client slot
@@ -63,7 +106,8 @@ enum ClientCommand
   COMMAND_MAX
 };
 
-typedef void (*pLightOperator)( struct LightClient * lc, boolean enable );
+// must return 0 or 1 for the new light _state, if applicable. ie. turning on/off a light
+typedef uint8_t (*fnLightOperator)( struct LightClient * lc, HTTPRequest * request );
 typedef void (*fnCommand)( LightClient * lc, uint8_t * data, uint8_t dataLength );
 
 void setCommand( uint8_t command, fnCommand command_function );
@@ -71,6 +115,7 @@ void setCommand( uint8_t command, fnCommand command_function );
 LightClient * findOrCreateLightClient( XBeeAddress64 & address );
 LightClient * getClientAtIndex( uint8_t index );
 
+void lightControl_clientRead( XBee & xbee, LightClient * client );
 void lightControl_readXBeePacket( XBee & xbee );
 
 bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * data, uint8_t payload_length );
