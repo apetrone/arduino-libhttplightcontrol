@@ -52,8 +52,6 @@ struct HTTPRequest
 
   uint8_t _next_keypair;
   KeyPair keypairs[ kMaxKeypairs ];
-  //char method[ kMaxHTTPMethodLength ];
-  //char request[ kMaxHTTPRequestLength ]; 
 
   uint8_t method_offset;
   uint8_t method_length;
@@ -98,10 +96,8 @@ struct LightClient
 enum ClientCommand
 {
   ERROR = 0,
-  TOGGLE_LED,
   SEND_CLIENT_NAME, // request for client's name
   CONTROL_LIGHT,    // on/off
-
 
   COMMAND_MAX
 };
