@@ -96,7 +96,8 @@ struct LightClient
 enum ClientCommand
 {
   ERROR = 0,
-  SEND_CLIENT_NAME, // request for client's name
+  SEND_CLIENT_NAME, // request for client's name,
+  RECV_CLIENT_NAME, // command to store the client's name
   CONTROL_LIGHT,    // on/off
 
   COMMAND_MAX
@@ -106,6 +107,8 @@ enum ClientCommand
 typedef uint8_t (*fnLightOperator)( struct LightClient * lc, HTTPRequest * request );
 typedef void (*fnCommand)( LightClient * lc, uint8_t * data, uint8_t dataLength );
 
+void lightcontrol_set_client_name( LightClient * lc, uint8_t * data, uint8_t data_length );
+
 void setCommand( uint8_t command, fnCommand command_function );
 
 LightClient * findOrCreateLightClient( XBeeAddress64 & address );
@@ -113,6 +116,7 @@ LightClient * getClientAtIndex( uint8_t index );
 
 void lightControl_clientRead( XBee & xbee, LightClient * client );
 void lightControl_readXBeePacket( XBee & xbee );
+
 
 bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * data, uint8_t payload_length );
 void handleClientCommand( XBee & xbee, LightClient * lc, uint8_t * data, uint8_t dataLength );

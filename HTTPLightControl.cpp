@@ -195,6 +195,14 @@ bool LightClient::matchesAddress( XBeeAddress64 & addr )
 	return (_addr.getMsb() == addr.getMsb() && _addr.getLsb() == addr.getLsb());
 }
 
+void lightcontrol_set_client_name( LightClient * lc, uint8_t * data, uint8_t data_length )
+{
+	if ( lc )
+	{
+		strncpy( lc->_name, (const char*)data, kMaxClientNameCharacters );
+	}
+} // lightcontrol_set_client_name
+
 void setCommand( uint8_t command, fnCommand command_function )
 {
 	if ( command >= COMMAND_MAX )
