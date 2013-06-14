@@ -53,6 +53,7 @@ typedef void (*fnCommand)( HttpLightClient * lc, uint8_t * data, uint8_t dataLen
 void setCommand( uint8_t command, fnCommand command_function );
 
 void lightcontrol_set_client_name( HttpLightClient * lc, uint8_t * data, uint8_t data_length );
+
 void lightControl_clientRead( XBee & xbee, HttpLightClient * client );
 void lightControl_readXBeePacket( XBee & xbee );
 void handleClientCommand( XBee & xbee, HttpLightClient * lc, uint8_t * data, uint8_t dataLength );

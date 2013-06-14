@@ -38,3 +38,16 @@ bool HttpLightClient::matches_address( XBeeAddress64 & other_address )
 {
 	return (address.getMsb() == other_address.getMsb() && address.getLsb() == other_address.getLsb());
 } // matches_address
+
+void HttpLightClient::send_server_heartbeat( XBee & xbee )
+{
+	// send a heartbeat packet
+
+	char packet[32];
+
+	// stream.init( buffer, 32 );
+	// stream.write( (void*)SEND_CLIENT_NAME, 1 );
+	// stream.write( (void*)client_name, strlen((const char*)client_name) );
+
+	// transmitAndAcknowledge( xbee, lc->address, (uint8_t*)stream.stream_data(), stream.offset_pointer() );	
+} // send_server_heartbeat

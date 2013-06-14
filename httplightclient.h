@@ -38,7 +38,11 @@ struct HttpLightClient
 	HttpLightClient();
 	~HttpLightClient();
 
+	// returns true if our address matches the address passed in
 	bool matches_address( XBeeAddress64 & addr );
+
+	// send a heartbeat to the server to maintain online status
+	void send_server_heartbeat( XBee & xbee );
 }; // HttpLightClient
 
 

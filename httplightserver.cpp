@@ -109,14 +109,19 @@ void HttpLightServer::read_packet( XBee & xbee )
 			{
 				// at this moment, all I know is that it's an XBee client.
 				// Will query for more information...
-				lc->type = CLIENT_TYPE_WIRELESS;
+
 				lc->address = addr;
-				lc->state = 0;
 				lc->retries = kMaxClientRetries;
 
-				// request client name; minimum two bytes for a request
-				uint8_t name_request[] = { SEND_CLIENT_NAME, 0 };
-				transmitAndAcknowledge( xbee, lc->address, name_request, 2 );
+				if (lc->type == CLIENT_TYPE_UNUSED)
+				{
+					lc->type = CLIENT_TYPE_WIRELESS;
+					lc->state = 0;
+
+					// request client name; minimum two bytes for a request
+					uint8_t name_request[] = { SEND_CLIENT_NAME, 0 };
+					transmitAndAcknowledge( xbee, lc->address, name_request, 2 );					
+				}
 			}
 		}
 	}
