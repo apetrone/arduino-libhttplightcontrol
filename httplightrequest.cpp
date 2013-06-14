@@ -19,8 +19,9 @@
 // FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // -------------------------------------------------------------
-#include "HTTPLightControl.h"
-
+#include "httplightrequest.h"
+#include "httplightclient.h"
+#include "httplightcommon.h"
 
 HTTPRequest::HTTPRequest()
 {
@@ -177,29 +178,15 @@ const char * keypair_getvalue( struct HTTPRequest * ci, const char * key )
 
 
 
-void null_command( LightClient * lc, uint8_t * data, uint8_t dataLength ) {}
+void null_command( HttpLightClient * lc, uint8_t * data, uint8_t dataLength ) {}
 
 fnCommand commandTable[ COMMAND_MAX ] = { null_command };
-LightClient lightClients[ kMaxLightClients ];
 
-LightClient::LightClient()
-{
-	_type = 0;
-	_pin = 0;
-	_state = 0;
-	_retries = 0;
-}
-
-bool LightClient::matchesAddress( XBeeAddress64 & addr )
-{
-	return (_addr.getMsb() == addr.getMsb() && _addr.getLsb() == addr.getLsb());
-}
-
-void lightcontrol_set_client_name( LightClient * lc, uint8_t * data, uint8_t data_length )
+void lightcontrol_set_client_name( HttpLightClient * lc, uint8_t * data, uint8_t data_length )
 {
 	if ( lc )
 	{
-		strncpy( lc->_name, (const char*)data, kMaxClientNameCharacters );
+		strncpy( lc->name, (const char*)data, kMaxClientNameCharacters );
 	}
 } // lightcontrol_set_client_name
 
@@ -213,57 +200,7 @@ void setCommand( uint8_t command, fnCommand command_function )
 	commandTable[ command ] = command_function;
 }
 
-LightClient * findOrCreateLightClient( XBeeAddress64 & addr )
-{
-	LightClient * c = 0;
-
-	// iterate over clients; first-pass to see if there's an active
-	// client with the address passed in
-	for( uint8_t i = 0; i < kMaxLightClients; ++i )
-	{
-		c = &lightClients[ i ];
-		if ( c->_type != eUnused && c->matchesAddress( addr ) )
-		{
-			return c;
-		}
-		else
-		{
-			c = 0;
-		}
-	}
-
-	// no client matched the input address
-	// see if we can find an unused slot
-	if ( !c )
-	{
-		for( uint8_t i = 0; i < kMaxLightClients; ++i )
-		{
-			c = &lightClients[ i ];
-			if ( c->_type == eUnused )
-			{
-				break;
-			}
-			else
-			{
-				c = 0;
-			}
-		}
-	}
-
-	return c;
-}
-
-LightClient * getClientAtIndex( uint8_t index )
-{
-	if ( index >= kMaxLightClients )
-	{
-		return 0;
-	}
-
-	return &lightClients[ index ];
-}
-
-void lightControl_clientRead( XBee & xbee, LightClient * client )
+void lightControl_clientRead( XBee & xbee, HttpLightClient * client )
 {
 	ZBRxResponse rx = ZBRxResponse();
 	xbee.readPacket();
@@ -280,46 +217,6 @@ void lightControl_clientRead( XBee & xbee, LightClient * client )
 			handleClientCommand( xbee, client, rx.getData(), rx.getDataLength() );
 		}
 	}	
-}
-
-void lightControl_readXBeePacket( XBee & xbee )
-{
-	ZBRxResponse rx = ZBRxResponse();
-	xbee.readPacket();
-
-	if ( xbee.getResponse().isAvailable() )
-	{
-		uint8_t api_id = xbee.getResponse().getApiId();
-		xbee.getResponse().getZBRxResponse( rx );
-		XBeeAddress64 & addr = rx.getRemoteAddress64();
-
-		if ( api_id == ZB_RX_RESPONSE )
-		{
-			// received a response from a client, process this as a command
-			LightClient * lc = findOrCreateLightClient( addr );
-			if ( lc )
-			{
-				handleClientCommand( xbee, lc, rx.getData(), rx.getDataLength() );
-			}
-		}
-		else if ( api_id == ZB_IO_NODE_IDENTIFIER_RESPONSE )
-		{
-			LightClient * lc = findOrCreateLightClient( addr );
-			if ( lc )
-			{
-				// at this moment, all I know is that it's an XBee client.
-				// Will query for more information...
-				lc->_type = eXBeeClient;
-				lc->_addr = addr;
-				lc->_state = 0;
-				lc->_retries = kMaxClientRetries;
-
-				// request client name; minimum two bytes for a request
-				uint8_t name_request[] = { SEND_CLIENT_NAME, 0 };
-				transmitAndAcknowledge( xbee, lc->_addr, name_request, 2 );
-			}
-		}
-	}
 }
 
 bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * data, uint8_t payload_length )
@@ -347,7 +244,7 @@ bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * dat
 }
 
 
-void handleClientCommand( XBee & xbee, LightClient * lc, uint8_t * data, uint8_t dataLength )
+void handleClientCommand( XBee & xbee, HttpLightClient * lc, uint8_t * data, uint8_t dataLength )
 {
 	if ( dataLength > 1 )
 	{
