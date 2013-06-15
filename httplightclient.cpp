@@ -27,6 +27,7 @@ HttpLightClient::HttpLightClient()
 	pin = 0;
 	state = 0;
 	retries = 0;
+	connection_is_active = true; // force true for now
 } // HttpLightClient
 
 HttpLightClient::~HttpLightClient()
@@ -51,3 +52,35 @@ void HttpLightClient::send_server_heartbeat( XBee & xbee )
 
 	// transmitAndAcknowledge( xbee, lc->address, (uint8_t*)stream.stream_data(), stream.offset_pointer() );	
 } // send_server_heartbeat
+
+void HttpLightClient::read_packet( XBee & xbee )
+{
+	ZBRxResponse rx = ZBRxResponse();
+	xbee.readPacket();
+
+	if ( xbee.getResponse().isAvailable() )
+	{
+		uint8_t api_id = xbee.getResponse().getApiId();
+		xbee.getResponse().getZBRxResponse( rx );
+		XBeeAddress64 & addr = rx.getRemoteAddress64();
+
+		this->address = addr;
+		
+		if ( api_id == ZB_RX_RESPONSE )
+		{
+			// received a response from a client, process this as a command
+			handleClientCommand( xbee, this, rx.getData(), rx.getDataLength() );
+		}
+	}
+} // read_packet
+
+
+bool HttpLightClient::is_connected()
+{
+	return connection_is_active;
+} // is_connected
+
+void HttpLightClient::connect( XBee & xbee )
+{
+
+} // connect

@@ -224,7 +224,8 @@ bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * dat
 	ZBTxRequest request = ZBTxRequest( address, data, payload_length );
 	xbee.send( request );
 
-	// give up to 500ms time for a response
+	delay( 250 );
+
 	if ( xbee.readPacket( kMaxResponseTimeoutMilliseconds ) )
 	{
 		if ( xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE )

@@ -102,26 +102,27 @@ void HttpLightServer::read_packet( XBee & xbee )
 				handleClientCommand( xbee, lc, rx.getData(), rx.getDataLength() );
 			}
 		}
-		else if ( api_id == ZB_IO_NODE_IDENTIFIER_RESPONSE )
+		else if ( api_id == ZB_IO_NODE_IDENTIFIER_RESPONSE ) // XBee connected!
 		{
 			HttpLightClient * lc = find_or_create_client( addr );
 			if ( lc )
 			{
 				// at this moment, all I know is that it's an XBee client.
 				// Will query for more information...
-
+				memset( lc->name, 0, kMaxClientNameCharacters );
+				strncpy( lc->name, "connecting", 10 );
 				lc->address = addr;
 				lc->retries = kMaxClientRetries;
+				lc->type = CLIENT_TYPE_WIRELESS;
+				lc->state = 0;
 
-				if (lc->type == CLIENT_TYPE_UNUSED)
-				{
-					lc->type = CLIENT_TYPE_WIRELESS;
-					lc->state = 0;
 
-					// request client name; minimum two bytes for a request
-					uint8_t name_request[] = { SEND_CLIENT_NAME, 0 };
-					transmitAndAcknowledge( xbee, lc->address, name_request, 2 );					
-				}
+				// wait 250ms, then request client name from xbee
+				delay(250);
+
+				// request client name; minimum two bytes for a request
+				uint8_t name_request[] = { SEND_CLIENT_NAME, 0 };
+				transmitAndAcknowledge( xbee, lc->address, name_request, 2 );
 			}
 		}
 	}
