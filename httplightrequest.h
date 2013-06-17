@@ -26,19 +26,17 @@
 // lower level parsing
 struct KeyPair
 {
-  const char * key;
-  const char * value;
+  char * key;
+  char * value;
 };
 
-
-const uint8_t kMaxHTTPRequestLength = 32;
-const uint8_t kMaxKeypairs = 4;
-const uint8_t kMaxHTTPMethodLength = 8;
+const uint8_t kMaxKeypairs = 10;
+const uint8_t kMaxHTTPMethodLength = 5;
+const uint8_t kMaxBufferSize = 128;
 
 struct HTTPRequest
 {
-  
-  String buffer;
+  char buffer[ kMaxBufferSize ];
 
   uint8_t _next_keypair;
   KeyPair keypairs[ kMaxKeypairs ];
@@ -51,10 +49,13 @@ struct HTTPRequest
 
   HTTPRequest();
 
-  void parseMethodAndRequest();
+  void parse_method_and_request( uint8_t buffer_size );
 };
 
 
-void keypair_add( struct HTTPRequest * ci, const char * key, const char * value );
-void keypair_parse( struct HTTPRequest * ci, char * request, unsigned int len );
-const char * keypair_getvalue( struct HTTPRequest * ci, const char * key );
+void keypair_add( struct HTTPRequest * ci, char * key, char * value );
+void keypair_parse( struct HTTPRequest * ci, char * request, uint8_t len );
+char * keypair_getvalue( struct HTTPRequest * ci, const char * key );
+
+// this doesn't do any real decoding; simply conversions of basic characters
+void keypair_urldecode( char * value );

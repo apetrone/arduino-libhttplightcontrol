@@ -23,7 +23,7 @@
 
 #include <XBee.h>
 
-const uint16_t kMaxResponseTimeoutMilliseconds = 1000;
+const uint16_t kMaxResponseTimeoutMilliseconds = 5000;
 
 
 enum LightClientType
@@ -59,6 +59,6 @@ void handleClientCommand( XBee & xbee, HttpLightClient * lc, uint8_t * data, uin
 
 
 
-
+void debug_flash_led(uint8_t pin, uint8_t times, uint16_t wait);
 
 bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * data, uint8_t payload_length );

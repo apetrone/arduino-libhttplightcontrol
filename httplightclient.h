@@ -31,8 +31,7 @@ struct HttpLightClient
 	uint8_t type;
 	uint8_t pin;
 	uint8_t state;
-	uint8_t retries;
-	uint8_t connection_is_active;
+
 	char name[ kMaxClientNameCharacters ];
 	XBeeAddress64 address;
 
@@ -46,9 +45,6 @@ struct HttpLightClient
 	void send_server_heartbeat( XBee & xbee );
 
 	void read_packet( XBee & xbee );
-
-	bool is_connected();
-	void connect( XBee & xbee );
 }; // HttpLightClient
 
 

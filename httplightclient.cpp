@@ -26,8 +26,6 @@ HttpLightClient::HttpLightClient()
 	type = 0;
 	pin = 0;
 	state = 0;
-	retries = 0;
-	connection_is_active = true; // force true for now
 } // HttpLightClient
 
 HttpLightClient::~HttpLightClient()
@@ -44,7 +42,7 @@ void HttpLightClient::send_server_heartbeat( XBee & xbee )
 {
 	// send a heartbeat packet
 
-	char packet[32];
+	//char packet[32];
 
 	// stream.init( buffer, 32 );
 	// stream.write( (void*)SEND_CLIENT_NAME, 1 );
@@ -73,14 +71,3 @@ void HttpLightClient::read_packet( XBee & xbee )
 		}
 	}
 } // read_packet
-
-
-bool HttpLightClient::is_connected()
-{
-	return connection_is_active;
-} // is_connected
-
-void HttpLightClient::connect( XBee & xbee )
-{
-
-} // connect
