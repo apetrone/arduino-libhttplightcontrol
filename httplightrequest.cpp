@@ -211,8 +211,6 @@ bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * dat
 	ZBTxRequest request = ZBTxRequest( address, data, payload_length );
 	xbee.send( request );
 
-	delay( 250 );
-
 	if ( xbee.readPacket( kMaxResponseTimeoutMilliseconds ) )
 	{
 		if ( xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE )
@@ -229,7 +227,7 @@ bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * dat
 		}
 	}
 	return false;
-}
+} // transmitAndAcknowledge
 
 
 void handleClientCommand( XBee & xbee, HttpLightClient * lc, uint8_t * data, uint8_t data_length )

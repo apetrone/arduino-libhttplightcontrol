@@ -109,6 +109,7 @@ void HttpLightServer::read_packet( XBee & xbee )
 		}
 		else if ( api_id == ZB_IO_NODE_IDENTIFIER_RESPONSE ) // XBee connected!
 		{
+			debug_flash_led( 8, 3, 300 );
 			HttpLightClient * lc = find_or_create_client( addr );
 			if ( lc )
 			{
@@ -121,6 +122,8 @@ void HttpLightServer::read_packet( XBee & xbee )
 				lc->type = CLIENT_TYPE_WIRELESS;
 				lc->state = 0;
 
+				delay( 250 );
+
 				// request client name; minimum two bytes for a request
 				uint8_t name_request[] = { SEND_CLIENT_NAME, 0 };
 				transmitAndAcknowledge( xbee, lc->address, name_request, 2 );
@@ -128,11 +131,12 @@ void HttpLightServer::read_packet( XBee & xbee )
 		}
 		else if ( api_id == ZB_TX_STATUS_RESPONSE )
 		{
-			debug_flash_led( 8, 3, 300 );
+			
 		}
 		else
 		{
 			// need to determine what else is sent
+			debug_flash_led( 8, 2, 500 );
 		}
 	}
 } // read_packet
