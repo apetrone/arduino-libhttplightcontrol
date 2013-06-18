@@ -30,9 +30,9 @@ struct KeyPair
   char * value;
 };
 
-const uint8_t kMaxKeypairs = 10;
+const uint8_t kMaxKeypairs = 7;
 const uint8_t kMaxHTTPMethodLength = 5;
-const uint8_t kMaxBufferSize = 128;
+const uint8_t kMaxBufferSize = 96;
 
 struct HTTPRequest
 {

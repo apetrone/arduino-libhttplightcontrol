@@ -237,13 +237,10 @@ void handleClientCommand( XBee & xbee, HttpLightClient * lc, uint8_t * data, uin
 		uint8_t command = data[0];
 		if ( command > 0 && command < COMMAND_MAX )
 		{
-			debug_flash_led( 8, command, 300 );
 			commandTable[ command ]( lc, data+1, data_length-1 );
 			return;
 		}
 	}
-
-	debug_flash_led( 8, 3, 500 );
 }
 
 void debug_flash_led(uint8_t pin, uint8_t times, uint16_t wait)
