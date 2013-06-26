@@ -32,7 +32,7 @@ struct HttpLightClient
 	uint8_t pin;
 	uint8_t state;
 
-	char name[ kMaxClientNameCharacters ];
+	// char name[ kMaxClientNameCharacters ];
 	XBeeAddress64 address;
 
 	HttpLightClient();
@@ -41,10 +41,10 @@ struct HttpLightClient
 	// returns true if our address matches the address passed in
 	bool matches_address( XBeeAddress64 & addr );
 
-	// send a heartbeat to the server to maintain online status
-	void send_server_heartbeat( XBee & xbee );
-
 	void read_packet( XBee & xbee );
+
+
+	void discover_coordinator( XBee & xbee );
 }; // HttpLightClient
 
 

@@ -23,8 +23,9 @@
 
 #include <XBee.h>
 
-const uint16_t kMaxResponseTimeoutMilliseconds = 5000;
-
+const uint16_t		kMaxResponseTimeoutMilliseconds 	= 3000;
+const uint8_t		kClientHeartbeatInterval			= 10000;		// interval client sends a heartbeat (alive) to server (>= MaxResponseTimeoutMilliseconds)
+const uint8_t		kClientHeartbeatTimeout				= 3;		// client disconnected after this many missed heartbeats
 
 enum LightClientType
 {
@@ -39,9 +40,10 @@ enum LightClientType
 enum ClientCommand
 {
 	ERROR = 0,
-	SEND_CLIENT_NAME, // request for client's name,
-	RECV_CLIENT_NAME, // command to store the client's name
-	CONTROL_LIGHT,    // on/off
+	SEND_CLIENT_NAME, 	// request for client's name,
+	CONTROL_LIGHT,    	// on/off
+
+	HANDSHAKE,
 
 	COMMAND_MAX
 }; // ClientCommand
@@ -52,9 +54,6 @@ struct HttpLightClient;
 typedef void (*fnCommand)( HttpLightClient * lc, uint8_t * data, uint8_t dataLength );
 void setCommand( uint8_t command, fnCommand command_function );
 
-void lightcontrol_set_client_name( HttpLightClient * lc, uint8_t * data, uint8_t data_length );
-
-void lightControl_readXBeePacket( XBee & xbee );
 void handleClientCommand( XBee & xbee, HttpLightClient * lc, uint8_t * data, uint8_t dataLength );
 
 
