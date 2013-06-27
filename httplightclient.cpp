@@ -25,12 +25,8 @@
 // WirelessRelayClient
 HttpLightClient::HttpLightClient()
 {
-	connected = 0;
 	pin = 0;
 	state = 0;
-	failures = 0;
-
-	memset( &this->address, 0, sizeof(XBeeAddress64) );
 } // HttpLightClient
 
 HttpLightClient::~HttpLightClient()

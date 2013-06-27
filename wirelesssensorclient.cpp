@@ -23,16 +23,24 @@
 
 //
 // WirelessSensorClient
+
+WirelessSensorClient::WirelessSensorClient()
+{
+	memset( packet_data, 0, (sizeof(uint16_t) * kWirelessSampleDataSize) + kWirelessSensorHeaderSize );
+}
+
+uint16_t * WirelessSensorClient::get_sample_pointer()
+{
+	return packet_data + 1;
+} // get_sample_pointer
+
 void WirelessSensorClient::send_sensor_samples( XBee & xbee, uint8_t type, void * data, uint8_t data_size )
 {
-	uint8_t * packet = new uint8_t[ data_size+2 ];
-
+	uint8_t * packet = (uint8_t*)packet_data;
 	packet[0] = type;
 	packet[1] = kMaxSensorSamples;
-	memcpy( &packet[2], data, data_size );
 
-	transmitAndAcknowledge( xbee, this->address, packet, data_size+2 );
-	delete [] packet;
-	Serial.println( "Sent sensor samples" );
+	transmitAndAcknowledge( xbee, this->address, (uint8_t*)packet_data,
+		(sizeof(uint16_t) * kWirelessSampleDataSize) + kWirelessSensorHeaderSize );
 } // send_sensor_samples
 

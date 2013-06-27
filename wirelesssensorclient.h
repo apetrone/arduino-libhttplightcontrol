@@ -23,9 +23,15 @@
 
 #include <wirelessclient.h>
 
+const uint8_t kWirelessSensorHeaderSize = 2;
+const uint8_t kWirelessSampleDataSize = (kMaxSensorSamples * 2);
+
 struct WirelessSensorClient : public WirelessClient
 {
+	uint16_t packet_data[ kWirelessSampleDataSize + kWirelessSensorHeaderSize ];
+
+	WirelessSensorClient();
+
+	uint16_t * get_sample_pointer();
 	void send_sensor_samples( XBee & xbee, uint8_t type, void * data, uint8_t data_size );
 }; // WirelessSensorClient
-
-

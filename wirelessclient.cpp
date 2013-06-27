@@ -26,6 +26,9 @@ void ping_pong_command( WirelessClient * lc, uint8_t * data, uint8_t dataLength 
 
 WirelessClient::WirelessClient()
 {
+	connected = 0;
+	failures = 0;
+	memset( &this->address, 0, sizeof(XBeeAddress64) );	
 	memset( this->command_table, (int)ping_pong_command, sizeof(fnCommand) * CMD_MAX );
 } // WirelessClient
 
