@@ -19,16 +19,20 @@
 // FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // -------------------------------------------------------------
-#pragma once
+#include <wirelesssensorclient.h>
 
-#include <Arduino.h> // for uint8_t
-#include "wirelessclient.h"
-
-struct HttpLightClient : public WirelessClient
+//
+// WirelessSensorClient
+void WirelessSensorClient::send_sensor_samples( XBee & xbee, uint8_t type, void * data, uint8_t data_size )
 {
-	uint8_t pin;
-	uint8_t state;
+	uint8_t * packet = new uint8_t[ data_size+2 ];
 
-	HttpLightClient();
-	~HttpLightClient();
-}; // HttpLightClient
+	packet[0] = type;
+	packet[1] = kMaxSensorSamples;
+	memcpy( &packet[2], data, data_size );
+
+	transmitAndAcknowledge( xbee, this->address, packet, data_size+2 );
+	delete [] packet;
+	Serial.println( "Sent sensor samples" );
+} // send_sensor_samples
+

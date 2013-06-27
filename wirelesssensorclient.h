@@ -21,14 +21,11 @@
 // -------------------------------------------------------------
 #pragma once
 
-#include <Arduino.h> // for uint8_t
-#include "wirelessclient.h"
+#include <wirelessclient.h>
 
-struct HttpLightClient : public WirelessClient
+struct WirelessSensorClient : public WirelessClient
 {
-	uint8_t pin;
-	uint8_t state;
+	void send_sensor_samples( XBee & xbee, uint8_t type, void * data, uint8_t data_size );
+}; // WirelessSensorClient
 
-	HttpLightClient();
-	~HttpLightClient();
-}; // HttpLightClient
+

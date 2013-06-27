@@ -1,1 +1,27 @@
-LightClient KEYWORD1
+#
+# Classes
+#
+WirelessClient	KEYWORD1
+WirelessSensorClient	KEYWORD1
+HttpLightClient	KEYWORD1
+
+#
+# Functions
+#
+map_command	KEYWORD2
+handle_command	KEYWORD2
+is_connected	KEYWORD2
+read_packet	KEYWORD2
+
+send_sensor_samples KEYWORD2
+
+debug_flash_led	KEYWORD2
+
+#
+# Constants
+#
+
+kMaxSensorSamples	LITERAL1
+
+CMD_PING_PONG	LITERAL1
+CMD_CONTROL_LIGHT	LITERAL1
