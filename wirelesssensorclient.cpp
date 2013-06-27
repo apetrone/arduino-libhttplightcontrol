@@ -24,23 +24,23 @@
 //
 // WirelessSensorClient
 
-WirelessSensorClient::WirelessSensorClient()
-{
-	memset( packet_data, 0, (sizeof(uint16_t) * kWirelessSampleDataSize) + kWirelessSensorHeaderSize );
-}
+// WirelessSensorClient::WirelessSensorClient()
+// {
+// 	memset( packet_data, 0, (sizeof(uint16_t) * kWirelessSampleDataSize) + kWirelessSensorHeaderSize );
+// }
 
 uint16_t * WirelessSensorClient::get_sample_pointer()
 {
 	return packet_data + 1;
 } // get_sample_pointer
 
-void WirelessSensorClient::send_sensor_samples( XBee & xbee, uint8_t type, void * data, uint8_t data_size )
+void WirelessSensorClient::send_sensor_samples( XBee & xbee, uint8_t type )
 {
 	uint8_t * packet = (uint8_t*)packet_data;
 	packet[0] = type;
 	packet[1] = kMaxSensorSamples;
 
-	transmitAndAcknowledge( xbee, this->address, (uint8_t*)packet_data,
+	send_packet( xbee, (uint8_t*)packet_data,
 		(sizeof(uint16_t) * kWirelessSampleDataSize) + kWirelessSensorHeaderSize );
 } // send_sensor_samples
 

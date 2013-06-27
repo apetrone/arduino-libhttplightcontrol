@@ -28,23 +28,11 @@
 const uint16_t		kMaxResponseTimeoutMilliseconds 		= 3000;
 const uint8_t		kMaxSensorSamples						= 5;		// number of samples per transmission
 const uint8_t 		kMaxTransmitFailures 					= 3;		// maximum transmission failures allowed before assumed 'disconnected'
-const uint8_t 		kMaxClientNameCharacters 				= 12;
-
-enum LightClientType
-{
-	CLIENT_TYPE_UNUSED = 0,		// unused client slot
-	CLIENT_TYPE_WIRED_RELAY,		// wired relay (on/off)
-	CLIENT_TYPE_WIRELESS,		// simple wireless client (on/off)
-	CLIENT_TYPE_WIRELESS_RGB,	// RGB-capable wireless client (rgb * num_pixels)
-
-	CLIENT_TYPE_MAX
-}; // LightClientType
 
 const uint8_t CMD_PING_PONG				= 0;
 const uint8_t CMD_CONTROL_LIGHT 		= 1;
 const uint8_t CMD_SENSOR_SAMPLES_HT 	= 2;
 const uint8_t CMD_MAX 					= 3;
-
 
 // command callback
 struct WirelessClient;
@@ -54,7 +42,6 @@ struct WirelessClient
 {
 	XBeeAddress64 address;
 
-	uint8_t connected;	// associated with coordinator?
 	uint8_t failures;	// send failure count
 
 	fnCommand command_table[ CMD_MAX ];	// command -> function pointer mapping
@@ -62,8 +49,9 @@ struct WirelessClient
 	WirelessClient();
 	void map_command( uint8_t command, fnCommand command_function );
 	void handle_command( XBee & xbee, uint8_t * data, uint8_t dataLength );
-	bool is_connected() const;
+	inline bool is_connected() const { return (failures < kMaxTransmitFailures); }
 	void read_packet( XBee & xbee );
+	void send_packet( XBee & xbee, uint8_t * data, uint8_t payload_length );
 
 }; // WirelessClient
 
@@ -71,7 +59,7 @@ struct WirelessClient
 
 void debug_flash_led(uint8_t pin, uint8_t times, uint16_t wait);
 
-bool transmitAndAcknowledge( XBee & xbee, XBeeAddress64 & address, uint8_t * data, uint8_t payload_length, bool do_ack = false );
+
 
 
 
