@@ -24,11 +24,6 @@
 //
 // WirelessSensorClient
 
-// WirelessSensorClient::WirelessSensorClient()
-// {
-// 	memset( packet_data, 0, (sizeof(uint16_t) * kWirelessSampleDataSize) + kWirelessSensorHeaderSize );
-// }
-
 uint16_t * WirelessSensorClient::get_sample_pointer()
 {
 	return packet_data + 1;

@@ -30,8 +30,6 @@ struct WirelessSensorClient : public WirelessClient
 {
 	uint16_t packet_data[ kWirelessSampleDataSize + kWirelessSensorHeaderSize ];
 
-	//WirelessSensorClient();
-
 	uint16_t * get_sample_pointer();
 	void send_sensor_samples( XBee & xbee, uint8_t type );
 }; // WirelessSensorClient

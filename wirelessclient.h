@@ -24,7 +24,6 @@
 #include <Arduino.h> // for uint8_t
 #include <XBee.h>
 
-
 const uint16_t		kMaxResponseTimeoutMilliseconds 		= 3000;
 const uint8_t		kMaxSensorSamples						= 5;		// number of samples per transmission
 const uint8_t 		kMaxTransmitFailures 					= 3;		// maximum transmission failures allowed before assumed 'disconnected'
@@ -43,7 +42,6 @@ struct WirelessClient
 	XBeeAddress64 address;
 
 	uint8_t failures;	// send failure count
-
 	fnCommand command_table[ CMD_MAX ];	// command -> function pointer mapping
 
 	WirelessClient();
@@ -54,12 +52,5 @@ struct WirelessClient
 	void send_packet( XBee & xbee, uint8_t * data, uint8_t payload_length );
 
 }; // WirelessClient
-
-
-
-void debug_flash_led(uint8_t pin, uint8_t times, uint16_t wait);
-
-
-
 
 

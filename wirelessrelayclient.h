@@ -19,20 +19,15 @@
 // FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // -------------------------------------------------------------
-#include "httplightclient.h"
+#pragma once
 
-//
-// WirelessRelayClient
-HttpLightClient::HttpLightClient()
+#include <Arduino.h> // for uint8_t
+#include "wirelessclient.h"
+
+struct WirelessRelayClient : public WirelessClient
 {
-	pin = 0;
-	state = 0;
-} // HttpLightClient
+	uint8_t pin;
 
-HttpLightClient::~HttpLightClient()
-{
-
-} // ~HttpLightClient
-
-
-
+	WirelessRelayClient( uint8_t target_pin );
+	~WirelessRelayClient();
+}; // WirelessRelayClient

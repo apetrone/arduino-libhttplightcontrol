@@ -19,7 +19,7 @@
 // FROM,OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 // -------------------------------------------------------------
-#include "httplightclient.h"
+#include "wirelessclient.h"
 
 
 void ping_pong_command( WirelessClient * lc, uint8_t * data, uint8_t dataLength ) {}
@@ -108,21 +108,4 @@ void WirelessClient::send_packet( XBee & xbee, uint8_t * data, uint8_t payload_l
 	ZBTxRequest request = ZBTxRequest( address, data, payload_length );
 	xbee.send( request );
 } // send_packet
-
-void debug_flash_led(uint8_t pin, uint8_t times, uint16_t wait)
-{
-	for ( uint8_t i = 0; i < times; i++ )
-	{
-		digitalWrite(pin, HIGH);
-		delay(wait);
-		digitalWrite(pin, LOW);
-
-		if (i + 1 < times)
-		{
-			delay(wait);
-		}
-	}
-} // debug_flash_led
-
-
 
