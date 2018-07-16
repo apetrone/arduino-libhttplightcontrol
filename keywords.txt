@@ -13,7 +13,7 @@ handle_command	KEYWORD2
 is_connected	KEYWORD2
 read_packet	KEYWORD2
 
-send_sensor_samples KEYWORD2
+send_sensor_samples	KEYWORD2
 
 debug_flash_led	KEYWORD2
 
